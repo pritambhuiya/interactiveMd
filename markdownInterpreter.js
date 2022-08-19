@@ -6,7 +6,15 @@ const append = (path, contents) => fs.appendFileSync(path, contents, 'utf8');
 
 const mdInterpreter = (path, identifier, sentence = '') => {
   const syntaxes = readFile(path);
-  const startingTag = syntaxes[identifier][0];
+  let startingTag;
+
+  try {
+    startingTag = syntaxes[identifier][0];
+  } catch (error) {
+    console.log('❗️❗️❗️ Invalid tag');
+    return;
+  }
+
   let closingTag = syntaxes[identifier][1];
   let space = '';
 
@@ -14,6 +22,7 @@ const mdInterpreter = (path, identifier, sentence = '') => {
     space = ' ';
     closingTag = '';
   }
+
   const mdContents = startingTag + space + sentence + closingTag + '\n';
   append('./markdown.md', mdContents);
 };
